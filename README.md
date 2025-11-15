@@ -5,7 +5,7 @@ This repository contains my personal attempt at creating (a rudimentary) deep le
 This is in no way meant to be used for professional Deep Learning purposes, as the library is in no way optimized for performance and fully written in Python.
 Training neural networks is, however, very well possible even if magnitudes slower than in official implementations. For an example see `src/neural_network_test.py`
 
-# What is currently implemented?
+### What is currently implemented?
 
 - Basic Computation Graph/Autodiff Engine
 - Linear Layers
@@ -14,7 +14,7 @@ Training neural networks is, however, very well possible even if magnitudes slow
 - Optimizers (SGD)
 - Basic Neural Network Functionality
 
-# What is not (yet) implemented? (*may be implemented in future*)
+### What is not (yet) implemented? (*may be implemented in future*)
 
 - More complex Layers (BatchNormalization, DropOut etc.)
 - CNNs, RNNs
@@ -25,7 +25,7 @@ Training neural networks is, however, very well possible even if magnitudes slow
 - Training History
 - EarlyStopping
 
-# What will (most likely) never be implemented? (*too hard*)
+### What will (most likely) never be implemented? (*too hard*)
 
 - Distributed Training
 - Transformer support
