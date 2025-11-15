@@ -3,7 +3,6 @@ import math
 
 
 class Expression():
-
     def __init__(self):
         self.value = 0
 
@@ -40,19 +39,14 @@ class Constant(Expression):
     def eval(self):
         pass
 
-    def derive(self, seed: float):
-        pass
 
 class Variable(Expression):
     def __init__(self, value: float):
         self.value = value
-        self.partial_derivative = 0.0
-
-    def eval(self):
-        pass
+        self.grad = 0.0
 
     def derive(self, seed: float):
-        self.partial_derivative += seed
+        self.grad += seed
 
 
 class Neg(Expression):
@@ -97,64 +91,28 @@ class Multiply(Expression):
         self.b.derive(self.a.value * seed)
 
 
-class Activation(Expression):
-    mode: str
-
-    def __init__(self, x):
-        pass
-
-
-class ReLU(Activation):
-    mode = 'scalar'
-
+class Abs(Expression):
     def __init__(self, x: Expression):
         self.x = x
 
     def eval(self):
         self.x.eval()
-        self.value = max(0, self.x.value)
-
+        self.value = np.abs(self.x.value)
+    
     def derive(self, seed: float):
         if self.x.value > 0:
             self.x.derive(seed)
+        elif self.x.value < 0:
+            self.x.derive(-seed)
+        else:
+            self.x.derive(0.0)
 
 
-class Sigmoid(Activation):
-    mode = 'scalar'
+def absolute(x: Expression):
+    return Abs(x)
 
-    def __init__(self, x: Expression):
-        self.x = x
-
-    def eval(self):
-        self.x.eval()
-        self.value = 1 / (1 + math.exp(-self.x.value))
-
-    def derive(self, seed: float):
-        self.x.derive(seed * self.value * (1 - self.value))
-
-
-class Softmax(Activation):
-    mode = "vector"
-    
-    def __init__(self, x_vec: list[Expression], index: int):
-            self.x_vec = x_vec
-            self.index = index
-            self.value = None
-
-    def eval(self):
-        for xi in self.x_vec:
-            xi.eval()
-        exps = np.array([math.exp(xi.value) for xi in self.x_vec])
-        self.value = exps[self.index] / exps.sum()
-
-    def derive(self, seed):
-        s = np.array([math.exp(xi.value) for xi in self.x_vec])
-        s /= s.sum()
-        grad = sum(seed * (s[j] * (1 if j==self.index else -s[self.index])) for j in range(len(s)))
-        for xi in self.x_vec:
-            xi.derive(grad)
-
-
+def vec_abs(xs: list[Expression]):
+    return [absolute(x) for x in xs]
 
 def dot(a, b):
     assert len(a) == len(b)
@@ -163,14 +121,6 @@ def dot(a, b):
         result = result + (a[i] * b[i])
     return result
 
-def wrap_into_variables(arr: np.ndarray):
-    return np.vectorize(lambda x: Variable(x))(arr)
-
-def map_to_value(arr: np.ndarray):
-    return np.vectorize(lambda x: x.value)(arr)
-
-vec_eval = np.vectorize(lambda x: x.eval())
-vec_derive = lambda seed: np.vectorize(lambda x: x.derive(seed))
 
 
 if __name__ == "__main__":
@@ -181,5 +131,5 @@ if __name__ == "__main__":
     z.eval()
     z.derive(1)
 
-    print(x.partial_derivative)
-    print(y.partial_derivative)
+    print(x.grad)
+    print(y.grad)

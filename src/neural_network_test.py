@@ -1,0 +1,35 @@
+import numpy as np
+
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.metrics import accuracy_score
+
+from engine.loss import CrossEntropyWithLogits
+from model.neural_network import NeuralNetwork, LinearLayer
+from engine.activation import Softmax, ReLU
+from engine.expression import vec_abs
+from engine.optimizer import SGD
+
+
+if __name__ == "__main__":
+    nn = NeuralNetwork(layers=[
+        LinearLayer(4, 20, ReLU),
+        #LinearLayer(20, 32, ReLU),
+        LinearLayer(20, 3)
+        ],
+        loss=CrossEntropyWithLogits,
+        optimizer=SGD(learning_rate=0.001)
+    )
+
+    X, y = load_iris(return_X_y=True)
+
+    encoder = OneHotEncoder(sparse_output=False)
+    y_cat = encoder.fit_transform(y.reshape(-1, 1))
+
+    nn.train(X, y_cat, epochs=100)
+    predictions = nn.predict(X, y_cat)
+    
+    y_pred = np.argmax(predictions, axis=1)
+    accuracy = accuracy_score(y_true=y, y_pred=y_pred)
+    
+    print(f"Accuracy: {accuracy}")
