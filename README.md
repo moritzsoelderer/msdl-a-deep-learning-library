@@ -5,6 +5,8 @@ This repository contains my personal attempt at creating (a rudimentary) deep le
 This is in no way meant to be used for professional Deep Learning purposes, as the library is in no way optimized for performance and fully written in Python.
 Training neural networks is, however, very well possible even if magnitudes slower than in official implementations. For an example see `src/neural_network_test.py`
 
+This project was inspired by an afternoon of learning for a Deep Learning and AI course at uni and by this video on Youtube of a guy implementing its own Neural Network: https://www.youtube.com/watch?v=cAkMcPfY_Ns. **For the sake of transparency**: No code has been copied from the creator of the mentioned video. This would have, undoubtly, negatively affected the learning experience.
+
 ### What is currently implemented?
 
 - Basic Computation Graph/Autodiff Engine
