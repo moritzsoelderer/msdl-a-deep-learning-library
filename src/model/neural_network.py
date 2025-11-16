@@ -25,7 +25,7 @@ class LinearLayer():
 
             if self.activation is not None:
                 if issubclass(self.activation, ScalarActivation):
-                    post_acts = [self.activation(z) for z in pre_acts]  # create new objects
+                    post_acts = [self.activation(z) for z in pre_acts]
                 elif issubclass(self.activation, VectorActivation):
                     post_acts = [self.activation(pre_acts, index=i) for i in range(len(pre_acts))]
                 else:
@@ -51,6 +51,7 @@ class NeuralNetwork():
         y = wrap_into_variables(y)
         for layer in self.layers:
             X = layer.propagate(X)
+        vec_eval(X)
         return X
 
     def backward_pass(self, loss):
@@ -60,26 +61,31 @@ class NeuralNetwork():
         all_weights = [layer.weights for layer in self.layers]
         return all_weights
 
-    def train(self, X: np.ndarray, y: np.ndarray, epochs: int = 100):
+    def train(self, X: np.ndarray, y: np.ndarray, epochs: int = 100, batch_size: int = 32):
         for i in range(epochs):
             print(f"Epoch: {i}")
-            pred = self.forward_pass(X, y)
-            vec_eval(pred)
-            losses = []
-            for logit_row, y_row in zip(pred, y):
-                losses.append(self.loss(logit_row, y_row))
-            vec_eval(losses)
-            y_pred = np.argmax(map_to_value(pred), axis=1)
-            y_s = np.argmax(y, axis=1)
-            print(accuracy_score(y_s, y_pred))
-            self.backward_pass(losses)
-            print(([map_to_value(w) for w in self.get_weights()]))
-            self.optimizer.step(self.get_weights())
-            print(([map_to_value(w) for w in self.get_weights()]))
+            for j in range(int(X.shape[0] / batch_size)):
+                batch = X[j * batch_size:(j+1)*batch_size]
+                batch_y = y[j * batch_size:(j+1)*batch_size]
+
+                pred = self.forward_pass(batch, batch_y)
+                losses = self.compute_loss(pred, batch_y)
+                self.backward_pass(losses)
+                self.optimizer.step(self.get_weights())
+
+                y_pred = np.argmax(map_to_value(pred), axis=1)
+                y_s = np.argmax(batch_y, axis=1)
+                print(f"Batch {j} - Accuracy: {accuracy_score(y_s, y_pred)}")
+
+    def compute_loss(self, X, y):
+        losses = []
+        for logit_row, y_row in zip(X, y):
+            losses.append(self.loss(logit_row, y_row))
+        vec_eval(losses)
+        return losses
 
     def predict(self, X: np.ndarray, y: np.ndarray) -> np.ndarray:
         pred = self.forward_pass(X, y)
-        vec_eval(pred)
         return map_to_value(pred)
 
 

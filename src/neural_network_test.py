@@ -13,9 +13,9 @@ from engine.optimizer import SGD
 
 if __name__ == "__main__":
     nn = NeuralNetwork(layers=[
-        LinearLayer(4, 20, ReLU),
-        #LinearLayer(20, 32, ReLU),
-        LinearLayer(20, 3)
+        LinearLayer(4, 12, ReLU),
+        LinearLayer(12, 8, ReLU),
+        LinearLayer(8, 3)
         ],
         loss=CrossEntropyWithLogits,
         optimizer=SGD(learning_rate=0.001)
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     encoder = OneHotEncoder(sparse_output=False)
     y_cat = encoder.fit_transform(y.reshape(-1, 1))
 
-    nn.train(X, y_cat, epochs=100)
+    nn.train(X, y_cat, epochs=300, batch_size=32)
     predictions = nn.predict(X, y_cat)
     
     y_pred = np.argmax(predictions, axis=1)
