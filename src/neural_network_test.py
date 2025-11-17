@@ -5,8 +5,8 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import accuracy_score
 
 from engine.loss import CrossEntropyWithLogits
-from model.layers import DropOut
-from model.neural_network import NeuralNetwork, LinearLayer
+from model.layers import LinearLayer, DropOut
+from model.neural_network import NeuralNetwork
 from engine.activation import ReLU
 from engine.optimizer import SGD
 

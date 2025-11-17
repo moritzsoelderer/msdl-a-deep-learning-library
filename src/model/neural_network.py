@@ -7,7 +7,7 @@ from engine.array_utils import wrap_into_variables, map_to_value, vec_eval, vec_
 from engine.loss import Loss
 from engine.optimizer import Optimizer
 
-from model.layers import DropOut, Layer, LinearLayer
+from model.layers import DropOut, Layer
 
 class PropagationMode(Enum):
     TRAINING = 1
