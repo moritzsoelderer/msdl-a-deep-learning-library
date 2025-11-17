@@ -10,7 +10,7 @@ This project was inspired by an afternoon of learning for a Deep Learning and AI
 ### What is currently implemented?
 
 - Basic Computation Graph/Autodiff Engine
-- Linear Layers
+- Linear Layer, DropOut Layer
 - Activation Functions (ReLU, Softmax, Sigmoid)
 - Losses (Cross-Entropy (with Softmax Activation))
 - Optimizers (SGD)
@@ -18,7 +18,7 @@ This project was inspired by an afternoon of learning for a Deep Learning and AI
 
 ### What is not (yet) implemented? (*may be implemented in future*)
 
-- More complex Layers (BatchNormalization, DropOut etc.)
+- More Advanced Layers (BatchNormalization, etc.)
 - CNNs, RNNs
 - Persisting Model state
 - Activation Functions (e.g. tanh)
