@@ -41,12 +41,11 @@ class Softmax(VectorActivation):
         for xi in self.x:
             xi.eval()
         logits = np.array([xi.value for xi in self.x])
-        exps = np.exp(logits - logits.max())  # stability
+        exps = np.exp(logits - logits.max())
         self.s = exps / exps.sum()
         self.value = self.s[self.index]
 
     def derive(self, seed):
-        # seed is dL/ds_i
         i = self.index
         s = self.s
 

@@ -17,18 +17,14 @@ class CrossEntropyWithLogits(Loss):
         vec_eval(self.logits)
         z_vals = map_to_value(self.logits)
 
-        # Stable softmax
         max_logit = max(logit.value for logit in self.logits)
         exps = [math.exp(logit.value - max_logit) for logit in self.logits]
         self.s = [e / sum(exps) for e in exps]
 
-        # Cross entropy loss: -sum(y * log(s))
-        # (only non-zero at true class)
         true_idx = np.argmax(self.y_true)
         self.value = -np.log(self.s[true_idx] + 1e-12)
 
     def derive(self, seed):
-        # seed is dL/dLoss, usually 1
         s = self.s
 
         for k, z in enumerate(self.logits):

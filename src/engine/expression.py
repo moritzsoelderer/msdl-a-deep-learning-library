@@ -21,6 +21,16 @@ class Expression():
         if not isinstance(other, Expression):
             other = Constant(other)
         return Multiply(self, other)
+
+    """ 
+    This unexpectedly causes problems with training. Reason is unknown for now...
+    Might be due to some numpy behavior. Multiplying by the inverse of the denominator 
+    works for division by Non-Expression types, e.g. floats.
+    
+    def __truediv__(self, other):
+        if not isinstance(other, Expression):
+            other = Constant(other)
+        return Divide(self, other) """
         
     def __sub__(self, other):
         if not isinstance(other, Expression):
@@ -89,6 +99,21 @@ class Multiply(Expression):
     def derive(self, seed: float):
         self.a.derive(self.b.value * seed)
         self.b.derive(self.a.value * seed)
+
+
+class Divide(Expression):
+    def __init__(self, numerator: Expression, denominator: Expression):
+        self.numerator = numerator
+        self.denominator = denominator
+
+    def eval(self):
+        self.numerator.eval()
+        self.denominator.eval()
+        self.value = self.numerator.value / self.denominator.value
+
+    def derive(self, seed: float):
+        self.numerator.derive(1 / (self.denominator.value) * seed)
+        self.denominator.derive(self.numerator.value / (self.denominator.value * self.denominator.value) * seed) 
 
 
 class Abs(Expression):

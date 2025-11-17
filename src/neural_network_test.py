@@ -5,9 +5,9 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import accuracy_score
 
 from engine.loss import CrossEntropyWithLogits
+from model.layers import DropOut
 from model.neural_network import NeuralNetwork, LinearLayer
-from engine.activation import Softmax, ReLU
-from engine.expression import vec_abs
+from engine.activation import ReLU
 from engine.optimizer import SGD
 
 
@@ -15,6 +15,7 @@ if __name__ == "__main__":
     nn = NeuralNetwork(layers=[
         LinearLayer(4, 12, ReLU),
         LinearLayer(12, 8, ReLU),
+        DropOut(rate=0.2),
         LinearLayer(8, 3)
         ],
         loss=CrossEntropyWithLogits,
