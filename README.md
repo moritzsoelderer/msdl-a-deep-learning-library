@@ -7,6 +7,30 @@ Training neural networks is, however, very well possible even if magnitudes slow
 
 This project was inspired by an afternoon of learning for a Deep Learning and AI course at uni and by this video on Youtube of a guy implementing its own Neural Network: https://www.youtube.com/watch?v=cAkMcPfY_Ns. **For the sake of transparency**: No code has been copied from the creator of the mentioned video. This would have, undoubtly, negatively affected the learning experience.
 
+An overview of what IS, MAY BE and WILL NEVER BE implemented can be found below.
+
+### Usage Example
+
+The usage closely aligns what one would expect from tensorflow or a neural network class in python.
+```
+{
+  nn = NeuralNetwork(layers=[
+      LinearLayer(4, 12, ReLU),
+      LinearLayer(12, 8, ReLU),
+      DropOut(rate=0.2),
+      LinearLayer(8, 3)
+      ],
+      loss=CrossEntropyWithLogits,
+      optimizer=SGD(learning_rate=0.001)
+  )
+
+  X, y = load_dataset()
+
+  nn.train(X, y, epochs=300, batch_size=32)
+  predictions = nn.predict(X, y_cat)
+}
+```
+
 ### What is currently implemented?
 
 - Basic Computation Graph/Autodiff Engine
@@ -27,7 +51,7 @@ This project was inspired by an afternoon of learning for a Deep Learning and AI
 - Training History
 - EarlyStopping
 
-### What will (most likely) never be implemented? (*too hard*)
+### What will (most likely) never be implemented? (*too hard and or time-consuming*)
 
 - Distributed Training
 - Transformer support
