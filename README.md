@@ -47,6 +47,7 @@ The usage closely aligns what one would expect from tensorflow or a neural netwo
 - Persisting Model state
 - Activation Functions (e.g. tanh)
 - Losses (MSE, RMSE, Huber-Loss etc.)
+- Optimizers (Adam, RMSProp)
 - Validation set support
 - Training History
 - EarlyStopping
