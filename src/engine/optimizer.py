@@ -1,7 +1,5 @@
 import numpy as np
 
-from engine.expression import Expression
-
 
 class Optimizer:
     def step(self, weights):
@@ -9,14 +7,14 @@ class Optimizer:
 
 
 class SGD(Optimizer):
-    def __init__(self, learning_rate: float):
+    def __init__(self, learning_rate: float, clip_gradients: float = None):
         self.learning_rate = learning_rate
+        self.clip_gradients = clip_gradients
 
     def step(self, weights):
         def update_weight(weight):
-            before = weight.value
-            weight.value = weight.value - self.learning_rate * weight.grad
-            #print(f"before {before}, grad {weight.grad}, after {weight.value}")
+            grad = np.clip(weight.grad, a_min=-self.clip_gradients, a_max=self.clip_gradients) if self.clip_gradients else weight.grad
+            weight.value -= self.learning_rate * grad
             weight.grad = 0.0
 
         vec_update_weights = np.vectorize(update_weight)
