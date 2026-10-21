@@ -1,20 +1,19 @@
 from enum import Enum
-from typing import Callable
-import numpy as np
-from sklearn.metrics import accuracy_score
 
+import numpy as np
 from engine.array_utils import wrap_into_variables, map_to_value, vec_eval, vec_derive
 from engine.loss import Loss
 from engine.optimizer import Optimizer
-
 from model.layers import DropOut, Layer
+from sklearn.metrics import accuracy_score
+
 
 class PropagationMode(Enum):
     TRAINING = 1
     PREDICTION = 2
 
 
-class NeuralNetwork():
+class NeuralNetwork:
     layers: list[Layer]
     loss: type[Loss]
     optimizer: Optimizer
@@ -44,9 +43,14 @@ class NeuralNetwork():
     def train(self, X: np.ndarray, y: np.ndarray, epochs: int = 100, batch_size: int = 32):
         for i in range(epochs):
             print(f"Epoch: {i}")
+
+            indices = np.arange(X.shape[0])
+            np.random.shuffle(indices)
+            X_shuffled = X[indices]
+            y_shuffled = y[indices]
             for j in range(int(X.shape[0] / batch_size)):
-                batch = X[j * batch_size:(j+1)*batch_size]
-                batch_y = y[j * batch_size:(j+1)*batch_size]
+                batch = X_shuffled[j * batch_size:(j+1)*batch_size]
+                batch_y = y_shuffled[j * batch_size:(j+1)*batch_size]
 
                 pred = self.forward_pass(batch, batch_y, PropagationMode.TRAINING)
                 losses = self.compute_loss(pred, batch_y)
