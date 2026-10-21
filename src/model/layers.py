@@ -31,7 +31,7 @@ class LinearLayer(Layer):
                 elif issubclass(self.activation, VectorActivation):
                     post_acts = [self.activation(pre_acts, index=i) for i in range(len(pre_acts))]
                 else:
-                    raise ValueError("Undefined Activation function")
+                    raise ValueError(f"Unsupported Activation function {self.activation}")
                 outputs.append(post_acts)
             else:
                 outputs.append(pre_acts)
